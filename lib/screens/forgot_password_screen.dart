@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/l10n/app_localizations.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:flutter_base/services/service_locator.dart';
+import 'package:flutter_base/services/navigation_service.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/app_button.dart';
 
@@ -23,7 +25,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.emailSentMessage)),
       );
-      Navigator.pop(context);
+      getIt<Navigation>().goBack();
     }
   }
 
@@ -36,7 +38,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Ionicons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => getIt<Navigation>().goBack(),
         ),
       ),
       body: SafeArea(
@@ -54,8 +56,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(height: 8),
               Text(
                 t.emailSentMessage, 
-                // Note using this key as placeholder for "Enter your email..." logic 
-                // to match keys available.
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurface.withOpacity(0.6),
                 ),

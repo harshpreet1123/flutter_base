@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../utils/secure_storage.dart';
+import '../services/service_locator.dart';
+import '../services/storage_service.dart';
+import '../constants/storage_keys.dart';
 
 class AuthProvider with ChangeNotifier {
   bool _isAuthenticated = false;
@@ -13,7 +15,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> _checkToken() async {
-    final token = await SecureStorage.getToken();
+    final token = await getIt<StorageService>().getAuthToken();
     if (token != null) {
       _isAuthenticated = true;
     }
@@ -27,7 +29,7 @@ class AuthProvider with ChangeNotifier {
     
     // Simulate API
     await Future.delayed(const Duration(seconds: 1));
-    await SecureStorage.saveToken("mock_token");
+    await getIt<StorageService>().setAuthToken("mock_token");
     
     _isAuthenticated = true;
     _isLoading = false;
@@ -35,7 +37,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await SecureStorage.deleteToken();
+    await getIt<StorageService>().removeSecure(StorageKeys.authToken); // matching key in storage_service
     _isAuthenticated = false;
     notifyListeners();
   }

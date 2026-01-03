@@ -1,95 +1,142 @@
 # Flutter Base Template
 
-A professional, feature-rich starter template for building modern Flutter applications. This template mirrors the robustness of a high-quality React Native template, adjusted for best practices in the Flutter ecosystem.
+A starter template for building high-quality Flutter applications. Designed with scalability, maintainability, and clean architecture.
 
 ## 🚀 Features
 
-- **Authentication Flow**: Pre-built Login, Signup, and Forgot Password screens with validation.
-- **Internationalization (i18n)**: 
-  - Full support for **8 languages**: English, Arabic, Spanish, German, Hindi, Punjabi, Japanese, Korean.
-  - **RTL Support**: Automatic layout adjustments for Right-to-Left languages (e.g., Arabic).
-  - Language switcher built-in.
-- **Theme System**: 
-  - Dynamic **Light/Dark mode** support.
-  - Custom `AppTheme` based on a slate color palette.
-  - Persisted user preference.
-- **State Management**: Scalable architecture using **Provider**.
-- **Navigation**: Native **Named Routes** for robust and standard navigation handling.
-- **Persistence**:
-  - `shared_preferences` for non-sensitive settings (Theme, Language).
-  - `flutter_secure_storage` for sensitive data (Auth Tokens).
-- **Reusable UI Components**: Modular widgets for Buttons, Inputs, Sheets, and Menu Items.
+*   **Robust Authentication**: Pre-configured Providers for Login, Signup, and Forgot Password flows.
+*   **Dependency Injection**: Centralized Service Locator using `get_it` for efficient dependency management.
+*   **Networking**: Pre-configured `Dio` client with Interceptors (Auth, Logging) and `flutter_dotenv` for environment configuration.
+*   **Navigation**: Service-based navigation allowing navigation from anywhere (even business logic) without Context.
+*   **Internationalization (i18n)**:
+    *   Full support for **English, Spanish, Arabic**.
+    *   **RTL Support** for Arabic.
+    *   Auto-generation of Dart localization classes.
+*   **Theming**:
+    *   Light & Dark mode support.
+    *   Persisted user preference.
+    *   Tailored Material 3 design system.
+*   **State Management**: Simple and effective state management using `Provider`.
+*   **Secure & Local Storage**: Unified `StorageService` for both `SharedPreferences` and `FlutterSecureStorage`.
+
+## 🛠 Tech Stack
+
+*   **Framework**: Flutter & Dart
+*   **State Management**: Provider
+*   **Networking**: Dio
+*   **Dependency Injection**: GetIt
+*   **Storage**: Flutter Secure Storage & Shared Preferences
+*   **Icons**: Ionicons
 
 ## 📂 Project Structure
 
-The project follows a flattened, clean architecture mainly located within `lib/`:
+The project structure is designed to be intuitive and scalable.
 
 ```
 lib/
-├── l10n/                  # Localization ARB files (app_en.arb, app_ar.arb, etc.)
-├── navigation/            # (Deprecated) - Navigation logic is now in app.dart & screens
-├── providers/             # State management (AuthProvider, SettingsProvider)
-├── screens/               # Application screens (Login, Home, Profile, etc.)
-├── theme/                 # Theme definitions (AppTheme)
-├── utils/                 # Utility classes (Preferences, SecureStorage)
-├── widgets/               # Reusable UI components (AppButton, LanguageSheet, etc.)
-├── app.dart               # Root `MaterialApp` widget, routes, and providers
-└── main.dart              # Entry point
+├── constants/             # Global constants files
+│   └── storage_keys.dart  # Keys used for local/secure storage
+├── l10n/                  # Localization ARB files
+├── providers/             # State Management (Logic & State)
+│   ├── auth_provider.dart     # Authentication logic
+│   └── settings_provider.dart # Theme & Language logic
+├── screens/               # UI Screens (Pages)
+├── services/              # Infrastructure & External Services
+│   ├── api_service.dart       # API Client wrapper
+│   ├── auth_interceptor.dart  # Auto-injects Bearer token
+│   ├── navigation_service.dart# Context-less navigation 
+│   ├── service_locator.dart   # GetIt DI Setup
+│   └── storage_service.dart   # Unified Storage wrapper
+├── theme/                 # Design System & Theme Config
+├── widgets/               # Reusable UI Components
+├── app.dart               # Root Widget
+└── main.dart              # Entry Point
 ```
 
 ## ⚡ Getting Started
 
-### Prerequisites
-- Flutter SDK (Latest Stable)
-- Android Studio / Xcode
+### 1. Requirements
 
-### Installation
+*   Flutter SDK (Latest Stable)
+*   VS Code or Android Studio
 
-1.  **Clone the repository**:
-    ```bash
-    git clone <repository-url>
-    cd flutter_base
+### 2. Setup
+
+clone the repo and install dependencies:
+
+```bash
+flutter pub get
+```
+
+### 3. Environment Config
+
+Creation a `.env` file in the root directory don't forget to add it to `.gitignore` if haven't already:
+
+```env
+API_BASE_URL=https://api.yourdomain.com
+```
+
+### 4. Run the App
+
+```bash
+flutter run
+```
+
+## 📖 Development Guide
+
+### How to Add a New Page
+
+1.  Create the screen file in `lib/screens/my_new_screen.dart`.
+2.  Register the route in `lib/app.dart` inside the `routes` map.
+    ```dart
+    '/my-new-screen': (context) => const MyNewScreen(),
+    ```
+3.  Navigate to given route:
+    ```dart
+    getIt<Navigation>().navigateTo('/my-new-screen');
     ```
 
-2.  **Install Dependencies**:
-    ```bash
-    flutter pub get
+### How to Add/Edit Translations
+
+1.  Open `lib/l10n/app_en.arb` (English is the template).
+2.  Add your new key-value pair:
+    ```json
+    "helloWorld": "Hello World",
+    "@helloWorld": {
+      "description": "Greeting text"
+    }
+    ```
+3.  Add the same key to `app_es.arb` and `app_ar.arb` with translations.
+4.  Run the app. Flutter will auto-generate the Dart code.
+5.  Use it in code: `AppLocalizations.of(context)!.helloWorld`.
+
+### How to Add a New Service
+
+1.  Create your service class in `lib/services/`.
+2.  Register it in `lib/services/service_locator.dart`:
+    ```dart
+    getIt.registerLazySingleton<MyService>(() => MyService());
+    ```
+3.  Access it anywhere:
+    ```dart
+    final myService = getIt<MyService>();
     ```
 
-3.  **Run the App**:
-    ```bash
-    flutter run
-    ```
-    *Note: If you encounter build issues related to localization files, try running: `flutter gen-l10n`*
+### Networking
 
-## 🌍 Internationalization (i18n)
+The `ApiService` is already set up with `Dio`.
 
-Translations are managed via ARB files in `lib/l10n/`.
+```dart
+// Example usage
+final api = getIt<ApiService>();
+try {
+  final response = await api.get('/users');
+} catch (e) {
+  print(e);
+}
+```
 
-**To add a new language:**
-1.  Create a new file `app_<locale_code>.arb` in `lib/l10n/`.
-2.  Copy the keys from `app_en.arb` and translate the values.
-3.  Add the new locale to the `supportedLocales` list in `lib/app.dart`.
-4.  Add the language to the list in `lib/screens/profile_screen.dart` (for the selector UI).
-5.  Run the app (or `flutter gen-l10n`) to regenerate delegates.
+## 🧹 Maintenance
 
-## 🔐 State Management & Storage
-
-- **AuthProvider**: Handles login/logout logic and notifies the app to switch between Auth/Main stacks.
-- **SettingsProvider**: Manages Theme and Locale state, persisting changes to disk immediately.
-- **SecureStorage**: Used to store the 'userToken', ensuring sensitive session data is safe.
-
-## 🧭 Navigation
-
-We use standard Flutter **Named Routes** defined in `lib/app.dart`:
-
-- `/login`: Login Screen
-- `/signup`: Signup Screen
-- `/forgot-password`: Password Reset
-- `/home`: Main Screen (Tab Bar Wrapper)
-
-Navigation is guarded by the `AuthProvider`. If the user is unauthenticated, the app defaults to the Login screen. Once authenticated, `home` switches to `MainScreen`.
-
-## 🎨 Theming
-
-Modify `lib/theme/app_theme.dart` to customize colors, fonts, and component styles. The app automatically respects the system theme or the user's manual override.
+*   **Linting**: The project uses `flutter_lints`. Run `flutter analyze` to check for issues.
+*   **Testing**: Basic test setup is in `test/`. Run `flutter test` to execute.

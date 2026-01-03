@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base/l10n/app_localizations.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:flutter_base/services/service_locator.dart';
+import 'package:flutter_base/services/navigation_service.dart';
 import '../widgets/app_text_field.dart';
 import '../widgets/app_button.dart';
 
@@ -25,7 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Ionicons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => getIt<Navigation>().goBack(),
         ),
       ),
       body: SafeArea(
@@ -79,7 +81,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     Text(t.alreadyHaveAccount),
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => getIt<Navigation>().goBack(),
                       child: Text(t.signIn),
                     ),
                   ],

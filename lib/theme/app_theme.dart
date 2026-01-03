@@ -56,6 +56,21 @@ class AppTheme {
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
+    navigationBarTheme: NavigationBarThemeData(
+      indicatorColor: primary,
+      iconTheme: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return const IconThemeData(color: Colors.white);
+        }
+        return const IconThemeData(color: textSecondaryLight);
+      }),
+      labelTextStyle: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return const TextStyle(color: primary, fontWeight: FontWeight.bold);
+        }
+        return const TextStyle(color: textSecondaryLight);
+      }),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -97,6 +112,21 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      indicatorColor: primary,
+      iconTheme: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return const IconThemeData(color: Colors.white);
+        }
+        return const IconThemeData(color: textSecondaryDark);
+      }),
+      labelTextStyle: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return const TextStyle(color: primary, fontWeight: FontWeight.bold);
+        }
+        return const TextStyle(color: textSecondaryDark);
+      }),
     ),
   );
 }

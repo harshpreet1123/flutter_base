@@ -5,6 +5,8 @@ import '../widgets/app_text_field.dart';
 import '../widgets/app_button.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:flutter_base/l10n/app_localizations.dart';
+import 'package:flutter_base/services/service_locator.dart';
+import 'package:flutter_base/services/navigation_service.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -85,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () => Navigator.pushNamed(context, '/forgot-password'),
+                      onPressed: () => getIt<Navigation>().navigateTo('/forgot-password'),
                       child: Text(t.forgotPassword),
                     ),
                   ),
@@ -112,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Text(t.dontHaveAccount),
                       TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/signup'),
+                        onPressed: () => getIt<Navigation>().navigateTo('/signup'),
                         child: Text(t.signUp),
                       ),
                     ],

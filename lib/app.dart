@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_base/l10n/app_localizations.dart';
+import 'services/service_locator.dart';
+import 'services/navigation_service.dart';
 
 import 'providers/auth_provider.dart';
 import 'providers/settings_provider.dart';
@@ -10,6 +12,7 @@ import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/forgot_password_screen.dart';
 import 'screens/main_screen.dart';
+import 'screens/settings_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,6 +45,8 @@ class _AppView extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: settings.themeMode,
+      
+      navigatorKey: getIt<Navigation>().navigatorKey,
 
       // Localization
       locale: settings.locale,
@@ -54,11 +59,6 @@ class _AppView extends StatelessWidget {
       supportedLocales: const [
         Locale('en'),
         Locale('es'),
-        Locale('de'),
-        Locale('hi'),
-        Locale('pa'),
-        Locale('ja'),
-        Locale('ko'),
         Locale('ar'),
       ],
 
@@ -71,6 +71,7 @@ class _AppView extends StatelessWidget {
         '/signup': (context) => const SignupScreen(),
         '/forgot-password': (context) => const ForgotPasswordScreen(),
         '/home': (context) => const MainScreen(),
+        '/settings': (context) => const SettingsScreen(),
       },
     );
   }
